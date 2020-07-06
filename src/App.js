@@ -1,5 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
+import Rete from 'rete';
+import ConnectionPlugin from 'rete-connection-plugin';
+import ReactRenderPlugin, { Node, Socket, Control } from 'rete-react-render-plugin';
+import createEditor from "./rete"
+import logo from './Antemonilogo.png';
 import './App.css';
 
 function App() {
@@ -11,6 +15,11 @@ function App() {
           Welcome to Antemoni, Hello!
         </h1>
       </header>
+      <body>
+        <div ref={ref => ref && createEditor(ref)}>
+
+        </div>
+      </body>
     </div>
   );
 }
