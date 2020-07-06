@@ -5,12 +5,12 @@ import ReactRenderPlugin from "rete-react-render-plugin"
 import AreaPlugin from "rete-area-plugin";
 import {TestNode} from "./TestNode"
 
-var numSocket = new Rete.Socket("Number value");
+var textSocket = new Rete.Socket("Text value");
 
-class NumControl extends Rete.Control {
+class TextControl extends Rete.Control {
   static component = ({ value, onChange }) => (
     <input
-      type="number"
+      type="String"
       value={value}
       ref={ref => {
         ref && ref.addEventListener("pointerdown", e => e.stopPropagation());
@@ -23,9 +23,9 @@ class NumControl extends Rete.Control {
     super(key);
     this.emitter = emitter;
     this.key = key;
-    this.component = NumControl.component;
+    this.component = TextControl.component;
 
-    const initial = node.data[key] || 0;
+    const initial = node.data[key] || "None";
 
     node.data[key] = initial;
     this.props = {
@@ -45,14 +45,14 @@ class NumControl extends Rete.Control {
   }
 }
 
-class NumComponent extends Rete.Component {
+class TextComponent extends Rete.Component {
   constructor() {
-    super("Number");
+    super("Text");
   }
 
   builder(node) {
-    var out1 = new Rete.Output("num", "Number", numSocket);
-    var ctrl = new NumControl(this.editor, "num", node);
+    var out1 = new Rete.Output("num", "String", textSocket);
+    var ctrl = new TextControl(this.editor, "num", node);
 
     return node.addControl(ctrl).addOutput(out1);
   }
@@ -62,56 +62,57 @@ class NumComponent extends Rete.Component {
   }
 }
 
-class AddComponent extends Rete.Component {
+class AppendComponent extends Rete.Component {
   constructor() {
-    super("Add");
+    super("Append");
     this.data.component = TestNode; // optional
   }
 
   builder(node) {
-    var inp1 = new Rete.Input("num1", "Number", numSocket);
-    var inp2 = new Rete.Input("num2", "Number2", numSocket);
-    var out = new Rete.Output("num", "Number", numSocket);
+    var inp1 = new Rete.Input("num1", "First String", textSocket);
+    var inp2 = new Rete.Input("num2", "Second String", textSocket);
+    var out = new Rete.Output("num", "Out String", textSocket);
 
-    inp1.addControl(new NumControl(this.editor, "num1", node));
-    inp2.addControl(new NumControl(this.editor, "num2", node));
+    inp1.addControl(new TextControl(this.editor, "num1", node));
+    inp2.addControl(new TextControl(this.editor, "num2", node));
 
     return node
       .addInput(inp1)
       .addInput(inp2)
-      .addControl(new NumControl(this.editor, "preview", node, true))
+      .addControl(new TextControl(this.editor, "preview", node, true))
       .addOutput(out);
   }
 
   worker(node, inputs, outputs) {
     var n1 = inputs["num1"].length ? inputs["num1"][0] : node.data.num1;
     var n2 = inputs["num2"].length ? inputs["num2"][0] : node.data.num2;
-    var sum = n1 + n2;
+    var appended = n1 + n2;
 
     this.editor.nodes
-      .find(n => n.id == node.id)
+      .find(n => n.id === node.id)
       .controls.get("preview")
-      .setValue(sum);
-    outputs["num"] = sum;
+      .setValue(appended);
+    outputs["num"] = appended;
   }
 }
 
-export async function createEditor(){
-    var editor = new Rete.NodeEditor("demo@0.1.0", "container");
-    var components = [new NumComponent(), new AddComponent()];
+export async function createEditor(container){
+    var editor = new Rete.NodeEditor("demo@0.1.0", container);
+    var components = [new TextComponent(), new AppendComponent
+    ()];
 
     editor.use(ConnectionPlugin);
     editor.use(ReactRenderPlugin);
 
     var engine = new Rete.Engine("demo@0.1.0");
 
-    components.map(c => {
-    editor.register(c);
-    engine.register(c);
-  });
+    components.forEach(c => {
+        editor.register(c)
+        engine.register(c)
+    });
 
-    var n1 = await components[0].createNode({ num: 2 });
-    var n2 = await components[0].createNode({ num: 3 });
+    var n1 = await components[0].createNode({ num: "Hello " });
+    var n2 = await components[0].createNode({ num: "World!" });
     var add = await components[1].createNode();
 
     n1.position = [80, 200];
