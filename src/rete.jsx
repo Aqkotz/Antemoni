@@ -5,7 +5,7 @@ import ReactRenderPlugin from "rete-react-render-plugin"
 import AreaPlugin from "rete-area-plugin";
 import {TestNode} from "./TestNode"
 
-var textSocket = new Rete.Socket("Text value");
+var strSocket = new Rete.Socket("String value");
 
 class TextControl extends Rete.Control {
   static component = ({ value, onChange }) => (
@@ -51,10 +51,12 @@ class TextComponent extends Rete.Component {
   }
 
   builder(node) {
-    var out1 = new Rete.Output("num", "String", textSocket);
+    var out1 = new Rete.Output("num", "String", strSocket);
     var ctrl = new TextControl(this.editor, "num", node);
 
-    return node.addControl(ctrl).addOutput(out1);
+    node.addControl(ctrl)
+    node.addOutput(out1)
+    return node
   }
 
   worker(node, inputs, outputs) {
@@ -69,9 +71,9 @@ class AppendComponent extends Rete.Component {
   }
 
   builder(node) {
-    var inp1 = new Rete.Input("num1", "First String", textSocket);
-    var inp2 = new Rete.Input("num2", "Second String", textSocket);
-    var out = new Rete.Output("num", "Out String", textSocket);
+    var inp1 = new Rete.Input("num1", "First String", strSocket);
+    var inp2 = new Rete.Input("num2", "Second String", strSocket);
+    var out = new Rete.Output("num", "Out String", strSocket);
 
     inp1.addControl(new TextControl(this.editor, "num1", node));
     inp2.addControl(new TextControl(this.editor, "num2", node));

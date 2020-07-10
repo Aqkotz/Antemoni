@@ -7,9 +7,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        {/*
         <h1>
           Antemoni Editor:
         </h1>
+        */}
       </header>
       <body>
         <div style={{ width: "100vw", height: "92vh" }} ref={ref => ref && createEditor(ref)}>
