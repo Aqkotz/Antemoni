@@ -14,7 +14,7 @@ function App() {
         */}
       </header>
       <body>
-        <div style={{ width: "100vw", height: "92vh" }} ref={ref => ref && createEditor(ref)}>
+        <div style={{ width: "100vw", height: "100vh" }} ref={ref => ref && createEditor(ref)}>
 
         </div>
       </body>
