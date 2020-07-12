@@ -1,7 +1,7 @@
 import React from "react"
 import { Node, Socket, Control } from 'rete-react-render-plugin'
 
-export class TestNode extends Node {
+export class MyNode extends Node {
     render() {
       const { node, bindSocket, bindControl } = this.props;
       const { outputs, controls, inputs, selected } = this.state;
