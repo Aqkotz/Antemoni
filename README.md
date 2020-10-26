@@ -1,6 +1,8 @@
-## Snapnode
+## Antimony
 
-Snapnode is an online browser-based text editor. Drag nodes and snap them together in a tree to add headers and text bodies. This project is in progress, and only the dragging and snapping functionality have been built so far.
+Antimony is now Snapnode.
+
+Antimony is an online browser-based text editor. Drag nodes and snap them together in a tree to add headers and text bodies. This project is in progress, and only the dragging and snapping functionality have been built so far.
 
 Known bugs: 
 
